@@ -18,6 +18,9 @@ import { FolderView } from './FolderView'
 import { AppEditDialog } from './AppEditDialog'
 import { useWhatsAppShortcuts } from '@/hooks/useWhatsAppShortcuts'
 import { useFolders } from '@/hooks/useFolders'
+import { usePageShortcuts, type PageShortcut } from '@/stores/page-shortcuts-store'
+import { PageShortcutIcon } from './PageShortcutIcon'
+import { PageShortcutForm } from './PageShortcutForm'
 import { WidgetGrid } from '@/widgets/WidgetGrid'
 import { WidgetPicker } from '@/widgets/WidgetPicker'
 import { DesktopContextMenu } from '@/widgets/DesktopContextMenu'
@@ -64,12 +67,14 @@ export function DesktopSurface() {
   const { shortcuts } = useWhatsAppShortcuts()
   const { folders } = useFolders()
   const topLevelFolders = useMemo(() => folders.filter((f) => !f.parent_id), [folders])
+  const pageShortcuts = usePageShortcuts((s) => s.shortcuts)
 
   // Context menu state
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
   const [showPicker, setShowPicker] = useState(false)
   const [showWAForm, setShowWAForm] = useState(false)
   const [showFolderCreate, setShowFolderCreate] = useState(false)
+  const [showPageShortcutForm, setShowPageShortcutForm] = useState(false)
   const [openFolderId, setOpenFolderId] = useState<string | null>(null)
 
   // Edit dialog state
@@ -102,9 +107,10 @@ export function DesktopSurface() {
     const keys: string[] = []
     for (const app of apps) keys.push(`app:${app.appId}`)
     for (const sc of shortcuts) keys.push(`shortcut:${sc.id}`)
+    for (const ps of pageShortcuts) keys.push(`page:${ps.id}`)
     for (const f of topLevelFolders) keys.push(`folder:${f.id}`)
     return keys
-  }, [apps, shortcuts, topLevelFolders])
+  }, [apps, shortcuts, pageShortcuts, topLevelFolders])
 
   // Compute grid columns based on surface width
   const [surfaceSize, setSurfaceSize] = useState({ w: 0, h: 0 })
@@ -444,6 +450,15 @@ export function DesktopSurface() {
         defaultColor: sc.color || '#25D366',
       }
     }
+    if (editTarget.startsWith('page:')) {
+      const ps = pageShortcuts.find((p) => p.id === editTarget.slice(5))
+      if (!ps) return null
+      return {
+        key: editTarget,
+        defaultName: ps.name,
+        defaultColor: ps.color || undefined,
+      }
+    }
     if (editTarget.startsWith('folder:')) {
       const f = folders.find((fl) => fl.id === editTarget.slice(7))
       if (!f) return null
@@ -454,7 +469,7 @@ export function DesktopSurface() {
       }
     }
     return null
-  }, [editTarget, apps, shortcuts, folders])
+  }, [editTarget, apps, shortcuts, pageShortcuts, folders])
 
   // --- Draw overlay rect ---
   const drawRect =
@@ -479,6 +494,10 @@ export function DesktopSurface() {
     if (key.startsWith('shortcut:')) {
       const sc = shortcuts.find((s) => `shortcut:${s.id}` === key)
       return sc ? <WhatsAppShortcutIcon shortcut={sc} /> : null
+    }
+    if (key.startsWith('page:')) {
+      const ps = pageShortcuts.find((p) => `page:${p.id}` === key)
+      return ps ? <PageShortcutIcon shortcut={ps} /> : null
     }
     if (key.startsWith('folder:')) {
       const f = topLevelFolders.find((fl) => `folder:${fl.id}` === key)
@@ -558,6 +577,31 @@ export function DesktopSurface() {
               onMouseDown={(e) => handleIconDragStart(key, e)}
             >
               <WhatsAppShortcutIcon shortcut={sc} />
+            </div>
+          )
+        })}
+
+        {pageShortcuts.map((ps) => {
+          const key = `page:${ps.id}`
+          const pos = positionMap.get(key)
+          if (!pos) return null
+          const dragging = isDragging(key)
+          return (
+            <div
+              key={key}
+              data-desktop-item={key}
+              className="absolute"
+              style={{
+                left: pos.col * ICON_CELL_W,
+                top: pos.row * ICON_CELL_H,
+                width: ICON_CELL_W,
+                height: ICON_CELL_H,
+                opacity: dragging ? 0.4 : 1,
+                transition: dragging ? 'none' : 'left 0.2s, top 0.2s',
+              }}
+              onMouseDown={(e) => handleIconDragStart(key, e)}
+            >
+              <PageShortcutIcon shortcut={ps} />
             </div>
           )
         })}
@@ -709,6 +753,7 @@ export function DesktopSurface() {
           onAddWidget={() => setShowPicker(true)}
           onAddWhatsAppShortcut={() => setShowWAForm(true)}
           onNewFolder={() => setShowFolderCreate(true)}
+          onNewPageShortcut={() => setShowPageShortcutForm(true)}
         />
       )}
 
@@ -720,6 +765,9 @@ export function DesktopSurface() {
 
       {/* Folder creation dialog */}
       {showFolderCreate && <FolderCreateDialog onClose={() => setShowFolderCreate(false)} />}
+
+      {/* Page shortcut form */}
+      {showPageShortcutForm && <PageShortcutForm onClose={() => setShowPageShortcutForm(false)} />}
 
       {/* Folder view overlay */}
       {openFolderId &&

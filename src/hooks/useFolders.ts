@@ -1,69 +1,62 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { supabase } from '@/lib/supabase'
-import { useAuth } from '@/providers/AuthProvider'
-import type { DbDesktopFolder, DbDesktopFolderItem, FolderIconPreset } from '@/types/database'
+import { useFoldersStore, type LocalFolder } from '@/stores/folders-store'
+import { useMemo } from 'react'
+import type { FolderIconPreset } from '@/types/database'
 
-const FOLDERS_KEY = 'desktop_folders'
-const FOLDER_ITEMS_KEY = 'folder_items'
-
+/**
+ * Hook that wraps the local Zustand folders store with an API
+ * matching the original react-query interface so existing components
+ * (FolderCreateDialog, FolderIcon, FolderView, DesktopSurface) keep working.
+ */
 export function useFolders() {
-  const { user } = useAuth()
-  const qc = useQueryClient()
+  const folders = useFoldersStore((s) => s.folders)
+  const createFolderFn = useFoldersStore((s) => s.createFolder)
+  const updateFolderFn = useFoldersStore((s) => s.updateFolder)
+  const deleteFolderFn = useFoldersStore((s) => s.deleteFolder)
 
-  const foldersQuery = useQuery({
-    queryKey: [FOLDERS_KEY, user.id],
-    queryFn: async (): Promise<DbDesktopFolder[]> => {
-      const { data, error } = await supabase
-        .from('desktop_folders')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at')
-      if (error) throw error
-      return data ?? []
-    },
-  })
+  // Mimic react-query mutation shape
+  const createFolder = useMemo(
+    () => ({
+      mutate: (
+        input: { name: string; icon_preset?: FolderIconPreset; color?: string; parent_id?: string },
+        opts?: { onSuccess?: () => void },
+      ) => {
+        createFolderFn(input)
+        opts?.onSuccess?.()
+      },
+      mutateAsync: async (
+        input: { name: string; icon_preset?: FolderIconPreset; color?: string; parent_id?: string },
+      ) => {
+        return createFolderFn(input)
+      },
+      isPending: false,
+    }),
+    [createFolderFn],
+  )
 
-  const createFolder = useMutation({
-    mutationFn: async (input: { name: string; icon_preset?: FolderIconPreset; color?: string; parent_id?: string }) => {
-      const { data, error } = await supabase
-        .from('desktop_folders')
-        .insert({
-          user_id: user.id,
-          name: input.name,
-          icon_preset: input.icon_preset ?? 'folder',
-          color: input.color ?? '#b87a4b',
-          parent_id: input.parent_id ?? null,
-        })
-        .select()
-        .single()
-      if (error) throw error
-      return data as DbDesktopFolder
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: [FOLDERS_KEY, user.id] }),
-  })
+  const updateFolder = useMemo(
+    () => ({
+      mutate: (input: Partial<LocalFolder> & { id: string }) => {
+        const { id, ...updates } = input
+        updateFolderFn(id, updates)
+      },
+      isPending: false,
+    }),
+    [updateFolderFn],
+  )
 
-  const updateFolder = useMutation({
-    mutationFn: async ({ id, ...input }: Partial<DbDesktopFolder> & { id: string }) => {
-      const { error } = await supabase
-        .from('desktop_folders')
-        .update({ ...input, updated_at: new Date().toISOString() })
-        .eq('id', id)
-      if (error) throw error
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: [FOLDERS_KEY, user.id] }),
-  })
-
-  const deleteFolder = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from('desktop_folders').delete().eq('id', id)
-      if (error) throw error
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: [FOLDERS_KEY, user.id] }),
-  })
+  const deleteFolder = useMemo(
+    () => ({
+      mutate: (id: string) => {
+        deleteFolderFn(id)
+      },
+      isPending: false,
+    }),
+    [deleteFolderFn],
+  )
 
   return {
-    folders: foldersQuery.data ?? [],
-    isLoading: foldersQuery.isLoading,
+    folders,
+    isLoading: false,
     createFolder,
     updateFolder,
     deleteFolder,
@@ -71,52 +64,42 @@ export function useFolders() {
 }
 
 export function useFolderItems(folderId: string | null) {
-  const qc = useQueryClient()
+  const allItems = useFoldersStore((s) => s.items)
+  const addItemFn = useFoldersStore((s) => s.addItem)
+  const removeItemFn = useFoldersStore((s) => s.removeItem)
 
-  const itemsQuery = useQuery({
-    queryKey: [FOLDER_ITEMS_KEY, folderId],
-    enabled: !!folderId,
-    queryFn: async (): Promise<DbDesktopFolderItem[]> => {
-      const { data, error } = await supabase
-        .from('desktop_folder_items')
-        .select('*')
-        .eq('folder_id', folderId!)
-        .order('sort_order')
-      if (error) throw error
-      return data ?? []
-    },
-  })
+  const items = useMemo(
+    () =>
+      folderId
+        ? allItems.filter((i) => i.folder_id === folderId).sort((a, b) => a.sort_order - b.sort_order)
+        : [],
+    [allItems, folderId],
+  )
 
-  const addItem = useMutation({
-    mutationFn: async (input: { item_type: string; item_id: string; label?: string }) => {
-      const { data, error } = await supabase
-        .from('desktop_folder_items')
-        .insert({
-          folder_id: folderId!,
-          item_type: input.item_type,
-          item_id: input.item_id,
-          label: input.label ?? null,
-          sort_order: (itemsQuery.data?.length ?? 0),
-        })
-        .select()
-        .single()
-      if (error) throw error
-      return data
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: [FOLDER_ITEMS_KEY, folderId] }),
-  })
+  const addItem = useMemo(
+    () => ({
+      mutate: (input: { item_type: string; item_id: string; label?: string }) => {
+        if (!folderId) return
+        addItemFn(folderId, input as { item_type: 'app' | 'shortcut' | 'subfolder' | 'file' | 'link' | 'contact'; item_id: string; label?: string })
+      },
+      isPending: false,
+    }),
+    [addItemFn, folderId],
+  )
 
-  const removeItem = useMutation({
-    mutationFn: async (itemId: string) => {
-      const { error } = await supabase.from('desktop_folder_items').delete().eq('id', itemId)
-      if (error) throw error
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: [FOLDER_ITEMS_KEY, folderId] }),
-  })
+  const removeItem = useMemo(
+    () => ({
+      mutate: (itemId: string) => {
+        removeItemFn(itemId)
+      },
+      isPending: false,
+    }),
+    [removeItemFn],
+  )
 
   return {
-    items: itemsQuery.data ?? [],
-    isLoading: itemsQuery.isLoading,
+    items,
+    isLoading: false,
     addItem,
     removeItem,
   }

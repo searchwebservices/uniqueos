@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type DesktopItemType = 'app' | 'shortcut' | 'folder'
+export type DesktopItemType = 'app' | 'shortcut' | 'page' | 'folder'
 
 export interface DesktopSelection {
   type: DesktopItemType

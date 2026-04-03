@@ -1,4 +1,4 @@
-import { LayoutGrid, Image, MessageSquare, FolderPlus, AppWindow } from 'lucide-react'
+import { LayoutGrid, Image, MessageSquare, FolderPlus, AppWindow, ExternalLink } from 'lucide-react'
 import { useWindowStore } from '@/stores/window-store'
 import { useDesktopApps } from '@/stores/desktop-apps-store'
 
@@ -9,9 +9,10 @@ interface Props {
   onAddWidget: () => void
   onAddWhatsAppShortcut?: () => void
   onNewFolder?: () => void
+  onNewPageShortcut?: () => void
 }
 
-export function DesktopContextMenu({ x, y, onClose, onAddWidget, onAddWhatsAppShortcut, onNewFolder }: Props) {
+export function DesktopContextMenu({ x, y, onClose, onAddWidget, onAddWhatsAppShortcut, onNewFolder, onNewPageShortcut }: Props) {
   const openWindow = useWindowStore((s) => s.openWindow)
   const openLauncher = useDesktopApps((s) => s.openLauncher)
 
@@ -31,11 +32,12 @@ export function DesktopContextMenu({ x, y, onClose, onAddWidget, onAddWhatsAppSh
   }
 
   const items = [
-    { label: 'Add app', icon: AppWindow, action: handleAddApp },
-    { label: 'New folder', icon: FolderPlus, action: () => { onNewFolder?.(); onClose() } },
-    { label: 'Add widget', icon: LayoutGrid, action: handleAddWidget },
-    { label: 'Change wallpaper', icon: Image, action: handleChangeWallpaper },
-    { label: 'New WhatsApp shortcut', icon: MessageSquare, action: () => { onAddWhatsAppShortcut?.(); onClose() } },
+    { label: 'Agregar app', icon: AppWindow, action: handleAddApp },
+    { label: 'Nueva carpeta', icon: FolderPlus, action: () => { onNewFolder?.(); onClose() } },
+    { label: 'Atajo de página', icon: ExternalLink, action: () => { onNewPageShortcut?.(); onClose() } },
+    { label: 'Agregar widget', icon: LayoutGrid, action: handleAddWidget },
+    { label: 'Cambiar fondo', icon: Image, action: handleChangeWallpaper },
+    { label: 'Atajo de WhatsApp', icon: MessageSquare, action: () => { onAddWhatsAppShortcut?.(); onClose() } },
   ]
 
   return (

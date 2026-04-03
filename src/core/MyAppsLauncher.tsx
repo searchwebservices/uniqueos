@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
-import { Search, X } from 'lucide-react'
+import { Search, X, Check, Plus } from 'lucide-react'
 import { getAllApps } from '@/lib/app-registry'
 import { useWindowStore } from '@/stores/window-store'
 import { useDesktopApps } from '@/stores/desktop-apps-store'
@@ -26,6 +26,8 @@ export function MyAppsLauncher() {
 function LauncherOverlay({ onClose }: { onClose: () => void }) {
   const apps = getAllApps()
   const openWindow = useWindowStore((s) => s.openWindow)
+  const addApp = useDesktopApps((s) => s.addApp)
+  const pinnedAppIds = useDesktopApps((s) => s.pinnedAppIds)
 
   const [search, setSearch] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
@@ -61,6 +63,13 @@ function LauncherOverlay({ onClose }: { onClose: () => void }) {
     }
     return map
   }, [filtered])
+
+  const handleAddToDesktop = useCallback(
+    (appId: string) => {
+      addApp(appId)
+    },
+    [addApp],
+  )
 
   const handleOpenApp = useCallback(
     (appId: string) => {
@@ -137,26 +146,57 @@ function LauncherOverlay({ onClose }: { onClose: () => void }) {
                 <div className="grid grid-cols-5 gap-3">
                   {categoryApps.map((app) => {
                     const Icon = app.icon
+                    const isOnDesktop = pinnedAppIds.includes(app.appId)
 
                     return (
-                      <button
+                      <div
                         key={app.appId}
-                        onClick={() => handleOpenApp(app.appId)}
-                        className="group flex flex-col items-center gap-2 p-3 rounded-[var(--radius-lg)] transition-all hover:bg-white/10 active:scale-95"
+                        className="group relative flex flex-col items-center gap-2 p-3 rounded-[var(--radius-lg)] transition-all hover:bg-white/10"
                       >
-                        <div
-                          className="w-14 h-14 flex items-center justify-center rounded-[var(--radius-lg)] transition-transform group-hover:scale-105"
-                          style={{
-                            background: 'rgba(255,255,255,0.12)',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                          }}
+                        {/* Click icon area to open app */}
+                        <button
+                          onClick={() => handleOpenApp(app.appId)}
+                          className="flex flex-col items-center gap-2 w-full active:scale-95 transition-transform"
                         >
-                          <Icon size={26} className="text-white/85" />
-                        </div>
-                        <span className="text-[11px] text-white/80 text-center leading-tight line-clamp-2 w-full">
-                          {app.title}
-                        </span>
-                      </button>
+                          <div
+                            className="w-14 h-14 flex items-center justify-center rounded-[var(--radius-lg)] transition-transform group-hover:scale-105"
+                            style={{
+                              background: 'rgba(255,255,255,0.12)',
+                              border: '1px solid rgba(255,255,255,0.1)',
+                            }}
+                          >
+                            <Icon size={26} className="text-white/85" />
+                          </div>
+                          <span className="text-[11px] text-white/80 text-center leading-tight line-clamp-2 w-full">
+                            {app.title}
+                          </span>
+                        </button>
+
+                        {/* Add/remove from desktop badge */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            if (!isOnDesktop) handleAddToDesktop(app.appId)
+                          }}
+                          className={`absolute top-1.5 right-1.5 w-5 h-5 flex items-center justify-center rounded-full transition-all ${
+                            isOnDesktop
+                              ? 'opacity-100'
+                              : 'opacity-0 group-hover:opacity-100'
+                          }`}
+                          style={{
+                            background: isOnDesktop
+                              ? 'var(--color-accent)'
+                              : 'rgba(255,255,255,0.15)',
+                          }}
+                          title={isOnDesktop ? 'En escritorio' : 'Agregar al escritorio'}
+                        >
+                          {isOnDesktop ? (
+                            <Check size={11} className="text-white" />
+                          ) : (
+                            <Plus size={11} className="text-white/70" />
+                          )}
+                        </button>
+                      </div>
                     )
                   })}
                 </div>
@@ -168,7 +208,7 @@ function LauncherOverlay({ onClose }: { onClose: () => void }) {
         {/* Hint */}
         <div className="pb-6">
           <p className="text-[10px] text-white/30">
-            Click para abrir una app.
+            Click para abrir. Usa el + para agregar al escritorio.
           </p>
         </div>
       </div>

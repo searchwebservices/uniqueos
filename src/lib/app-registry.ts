@@ -30,11 +30,11 @@ const apps: AppRegistryEntry[] = [
     component: lazy(() => import('@/apps/couples')),
     defaultSize: { width: 520, height: 600 },
     minSize: { width: 380, height: 400 },
-    singleton: true,
+    singleton: false,
     dockDefault: true,
     dockOrder: 0,
     routes: [{ path: '/*', loader: () => import('@/apps/couples') }],
-    buildRoute: () => '/',
+    buildRoute: (meta) => meta?.coupleId ? `/couple/${meta.coupleId}` : '/',
   },
   {
     appId: 'wedding-timeline',
