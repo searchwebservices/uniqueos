@@ -3,6 +3,7 @@ import { Upload } from 'lucide-react'
 import { useAuth } from '@/providers/AuthProvider'
 import { useUserProfile } from '@/hooks/useUserProfile'
 import { supabase } from '@/lib/supabase'
+import { AvatarCropper } from './AvatarCropper'
 
 export function AccountSettings() {
   const { user } = useAuth()
@@ -15,6 +16,7 @@ export function AccountSettings() {
   const [nameEdited, setNameEdited] = useState(false)
   const [newPassword, setNewPassword] = useState('')
   const [passwordMsg, setPasswordMsg] = useState('')
+  const [cropFile, setCropFile] = useState<File | null>(null)
 
   function handleNameSave() {
     if (!displayName.trim()) return
@@ -22,11 +24,19 @@ export function AccountSettings() {
     setNameEdited(false)
   }
 
-  function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (file) {
-      uploadAvatar.mutate(file)
+      setCropFile(file)
     }
+    // Reset input so the same file can be re-selected
+    e.target.value = ''
+  }
+
+  function handleCrop(blob: Blob) {
+    const file = new File([blob], 'avatar.png', { type: 'image/png' })
+    uploadAvatar.mutate(file)
+    setCropFile(null)
   }
 
   async function handlePasswordChange(e: FormEvent) {
@@ -86,7 +96,7 @@ export function AccountSettings() {
               ref={fileInputRef}
               type="file"
               accept="image/*"
-              onChange={handleAvatarUpload}
+              onChange={handleFileSelect}
               className="hidden"
             />
           </div>
@@ -161,6 +171,15 @@ export function AccountSettings() {
           )}
         </form>
       </section>
+
+      {/* Avatar cropper modal */}
+      {cropFile && (
+        <AvatarCropper
+          file={cropFile}
+          onCrop={handleCrop}
+          onCancel={() => setCropFile(null)}
+        />
+      )}
     </div>
   )
 }

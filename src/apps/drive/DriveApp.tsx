@@ -129,7 +129,7 @@ export function DriveApp() {
   const isEmpty = !isLoading && items.length === 0
 
   return (
-    <div className="flex flex-col h-full bg-[var(--color-bg-elevated)]">
+    <div className="@container flex flex-col h-full bg-[var(--color-bg-elevated)]">
       {/* Toolbar */}
       <div
         className="flex items-center gap-2 px-3 py-2 border-b shrink-0"

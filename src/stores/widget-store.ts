@@ -2,6 +2,22 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { WidgetInstance } from '@/types/os'
 
+// ── Placement mode: separate non-persisted store ──
+interface PlacementModeStore {
+  active: boolean
+  widgetType: string | null
+  enter: (widgetType: string) => void
+  exit: () => void
+}
+
+export const usePlacementMode = create<PlacementModeStore>()((set) => ({
+  active: false,
+  widgetType: null,
+  enter: (widgetType) => set({ active: true, widgetType }),
+  exit: () => set({ active: false, widgetType: null }),
+}))
+
+// ── Widget data: persisted store ──
 interface WidgetStore {
   widgets: WidgetInstance[]
   placementMode: { active: boolean; widgetType: string | null }
@@ -53,15 +69,36 @@ export const useWidgetStore = create<WidgetStore>()(
           ),
         })),
 
-      enterPlacementMode: (widgetType) =>
-        set({ placementMode: { active: true, widgetType } }),
+      // These now delegate to the separate placement store
+      enterPlacementMode: (widgetType) => {
+        usePlacementMode.getState().enter(widgetType)
+      },
 
-      exitPlacementMode: () =>
-        set({ placementMode: { active: false, widgetType: null } }),
+      exitPlacementMode: () => {
+        usePlacementMode.getState().exit()
+      },
 
       getWidgetsByWorkspace: (workspaceId) =>
         get().widgets.filter((w) => w.workspaceId === workspaceId && !w.hidden),
     }),
-    { name: 'tabletop-widgets' }
+    {
+      name: 'tabletop-widgets',
+      version: 1,
+      partialize: (state) => ({
+        widgets: state.widgets,
+      }) as unknown as WidgetStore,
+      migrate: (persisted: unknown, version: number) => {
+        if (version === 0) {
+          const state = persisted as { widgets?: WidgetInstance[] }
+          const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+          if (state.widgets) {
+            state.widgets = state.widgets.map(w =>
+              UUID_RE.test(w.id) ? w : { ...w, id: crypto.randomUUID() }
+            )
+          }
+        }
+        return persisted as WidgetStore
+      },
+    }
   )
 )

@@ -43,7 +43,7 @@ export function WhatsAppShortcutIcon({ shortcut }: Props) {
     <button
       onClick={handleClick}
       onDoubleClick={handleOpen}
-      className="flex flex-col items-center gap-1 w-16 p-2 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-tertiary)] transition-colors select-none"
+      className="flex flex-col items-center gap-1 w-16 p-2 rounded-[var(--radius-md)] hover:bg-[var(--color-desktop-icon-bg)] transition-colors select-none"
       aria-label={`Open WhatsApp chat with ${shortcut.name}`}
     >
       <div className="relative">
@@ -72,7 +72,13 @@ export function WhatsAppShortcutIcon({ shortcut }: Props) {
         </div>
       </div>
 
-      <span className="text-[10px] text-[var(--color-text-secondary)] text-center leading-tight line-clamp-2">
+      <span
+        className="text-[10px] text-center leading-tight line-clamp-2"
+        style={{
+          color: 'var(--color-desktop-text-secondary)',
+          textShadow: 'var(--desktop-text-shadow)',
+        }}
+      >
         {shortcut.name}
       </span>
     </button>

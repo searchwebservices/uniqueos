@@ -51,7 +51,7 @@ export function TasksApp() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-[var(--color-bg-elevated)]">
+    <div className="@container flex flex-col h-full bg-[var(--color-bg-elevated)]">
       {/* Toolbar */}
       <div
         className="flex items-center justify-between px-4 py-2 border-b shrink-0"

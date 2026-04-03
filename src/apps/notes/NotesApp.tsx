@@ -69,7 +69,7 @@ export function NotesApp({ initialNoteId }: NotesAppProps) {
   }, [activeNote, notes, deleteNote])
 
   return (
-    <div className="flex h-full bg-[var(--color-bg-elevated)]">
+    <div className="@container flex h-full bg-[var(--color-bg-elevated)]">
       {/* Sidebar */}
       <div
         className="w-[220px] shrink-0 flex flex-col border-r"
@@ -81,7 +81,7 @@ export function NotesApp({ initialNoteId }: NotesAppProps) {
           style={{ borderColor: 'var(--color-border-subtle)' }}
         >
           <div
-            className="flex-1 flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-md)] border"
+            className="flex-1 flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-md)] border transition-colors focus-within:border-[var(--color-accent)]"
             style={{
               borderColor: 'var(--color-border)',
               background: 'var(--color-bg-secondary)',

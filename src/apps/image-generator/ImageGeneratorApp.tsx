@@ -44,7 +44,7 @@ export function ImageGeneratorApp() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="@container flex flex-col h-full bg-[var(--color-bg-elevated)]">
       {/* Tabs */}
       <div
         className="flex border-b shrink-0"

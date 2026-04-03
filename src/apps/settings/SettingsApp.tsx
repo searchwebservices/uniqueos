@@ -23,7 +23,7 @@ export function SettingsApp() {
   const [section, setSection] = useState<SettingsSection>('appearance')
 
   return (
-    <div className="flex h-full bg-[var(--color-bg-elevated)]">
+    <div className="@container flex h-full bg-[var(--color-bg-elevated)]">
       {/* Sidebar */}
       <div
         className="w-48 shrink-0 border-r py-3"

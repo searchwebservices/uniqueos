@@ -3,7 +3,30 @@ import { useUserSettings } from '@/hooks/useUserSettings'
 import { Monitor, Moon, Sun } from 'lucide-react'
 import type { ThemeMode } from '@/types/os'
 import { cn } from '@/lib/cn'
-import { wallpaperPresets } from '@/lib/wallpapers'
+import { wallpaperPresets, type WallpaperPreset } from '@/lib/wallpapers'
+
+function groupWallpapers(): { label: string; presets: WallpaperPreset[] }[] {
+  const groups: { label: string; presets: WallpaperPreset[] }[] = [
+    { label: 'Gradients', presets: [] },
+    { label: 'Flat colors', presets: [] },
+    { label: 'Textures', presets: [] },
+  ]
+  for (const wp of wallpaperPresets) {
+    if (wp.id === 'default') groups[0].presets.unshift(wp)
+    else if (wp.id.startsWith('gradient-')) groups[0].presets.push(wp)
+    else if (wp.id.startsWith('flat-')) groups[1].presets.push(wp)
+    else groups[2].presets.push(wp)
+  }
+  return groups
+}
+
+const WALLPAPER_GROUPS = groupWallpapers()
+
+function wallpaperBgSize(id: string): string | undefined {
+  if (id === 'dots') return '24px 24px'
+  if (id === 'grid') return '40px 40px, 40px 40px'
+  return undefined
+}
 
 const THEME_OPTIONS: { value: ThemeMode; label: string; Icon: typeof Sun }[] = [
   { value: 'light', label: 'Light', Icon: Sun },
@@ -88,29 +111,36 @@ export function AppearanceSettings() {
       </section>
 
       {/* Wallpaper */}
-      <section>
-        <h3 className="text-xs font-medium text-[var(--color-text-secondary)] mb-3">
+      <section className="space-y-4">
+        <h3 className="text-xs font-medium text-[var(--color-text-secondary)]">
           Wallpaper
         </h3>
-        <div className="grid grid-cols-4 gap-2">
-          {wallpaperPresets.map((wp) => (
-            <button
-              key={wp.id}
-              onClick={() => handleWallpaperChange(wp.id)}
-              className={cn(
-                'aspect-video rounded-[var(--radius-md)] border-2 transition-all',
-                wallpaper === wp.id
-                  ? 'border-[var(--color-accent)] scale-[1.02]'
-                  : 'border-transparent hover:border-[var(--color-border)]',
-              )}
-              style={{
-                background: wp.css,
-                backgroundSize: wp.id === 'dots' ? '24px 24px' : undefined,
-              }}
-              title={wp.name}
-            />
-          ))}
-        </div>
+        {WALLPAPER_GROUPS.map((group) => (
+          <div key={group.label}>
+            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)] mb-2">
+              {group.label}
+            </p>
+            <div className="grid grid-cols-5 gap-2">
+              {group.presets.map((wp) => (
+                <button
+                  key={wp.id}
+                  onClick={() => handleWallpaperChange(wp.id)}
+                  className={cn(
+                    'aspect-video rounded-[var(--radius-md)] border-2 transition-all',
+                    wallpaper === wp.id
+                      ? 'border-[var(--color-accent)] scale-[1.02]'
+                      : 'border-transparent hover:border-[var(--color-border)]',
+                  )}
+                  style={{
+                    background: wp.css,
+                    backgroundSize: wallpaperBgSize(wp.id),
+                  }}
+                  title={wp.name}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
       </section>
 
       {/* Accent color */}

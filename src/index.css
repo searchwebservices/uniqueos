@@ -109,10 +109,16 @@
   --transition-slow: 300ms ease;
 
   /* --- Layout --- */
-  --topbar-height: 0px;
+  --topbar-height: 36px;
   --dock-height: 64px;
   --desktop-top: var(--topbar-height);
   --desktop-bottom: var(--dock-height);
+
+  /* --- Desktop surface text (adapts to wallpaper tone) --- */
+  --color-desktop-text: var(--color-text-primary);
+  --color-desktop-text-secondary: var(--color-text-secondary);
+  --color-desktop-icon-bg: transparent;
+  --desktop-text-shadow: none;
 }
 
 /* Dark mode */
@@ -171,6 +177,25 @@
 
   --shadow-window: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
+
+/* Wallpaper tone overrides — applied on the desktop surface */
+/* Dark wallpapers need light desktop text */
+[data-wallpaper-tone="dark"] {
+  --color-desktop-text: #f0ede6;
+  --color-desktop-text-secondary: rgba(240, 237, 230, 0.75);
+  --color-desktop-icon-bg: rgba(0, 0, 0, 0.15);
+  --desktop-text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Light wallpapers need dark desktop text */
+[data-wallpaper-tone="light"] {
+  --color-desktop-text: #2a2722;
+  --color-desktop-text-secondary: rgba(42, 39, 34, 0.65);
+  --color-desktop-icon-bg: rgba(255, 255, 255, 0.2);
+  --desktop-text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Auto tone follows theme (no override needed — uses default CSS vars) */
 
 /* Base styles */
 * {

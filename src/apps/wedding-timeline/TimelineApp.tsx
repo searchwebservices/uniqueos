@@ -74,7 +74,7 @@ export function TimelineApp() {
     : TIMELINE.filter(e => e.category === categoryFilter)
 
   return (
-    <div className="app-container flex flex-col h-full bg-[var(--color-bg-primary)]">
+    <div className="app-container flex flex-col h-full bg-[var(--color-bg-elevated)]">
       {/* Header */}
       <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
         <div className="flex items-center justify-between mb-1">

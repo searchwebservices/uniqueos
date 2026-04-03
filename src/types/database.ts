@@ -182,3 +182,75 @@ export interface DbRolePermission {
   can_access: boolean
   created_at: string
 }
+
+// ── Desktop Folders ──
+
+export type FolderIconPreset = 'folder' | 'whatsapp' | 'documents' | 'projects' | 'media' | 'contacts' | 'finance' | 'tools' | 'social' | 'custom'
+
+export interface DbDesktopFolder {
+  id: string
+  user_id: string
+  name: string
+  parent_id: string | null
+  icon_preset: FolderIconPreset
+  color: string
+  config: Record<string, unknown>
+  created_at: string
+  updated_at: string
+}
+
+export type FolderItemType = 'app' | 'shortcut' | 'subfolder' | 'file' | 'link' | 'contact'
+
+export interface DbDesktopFolderItem {
+  id: string
+  folder_id: string
+  item_type: FolderItemType
+  item_id: string
+  label: string | null
+  sort_order: number
+  config: Record<string, unknown>
+  created_at: string
+}
+
+// ── Contacts ──
+
+export type ContactRelationship = 'friend' | 'family' | 'coworker' | 'client' | 'partner' | 'vendor' | 'other'
+
+export interface DbContact {
+  id: string
+  user_id: string
+  name: string
+  nickname: string | null
+  email: string | null
+  phone: string | null
+  avatar_url: string | null
+  tags: string[]
+  relationship: ContactRelationship
+  company: string | null
+  job_title: string | null
+  socials: {
+    whatsapp?: string
+    instagram?: string
+    linkedin?: string
+    twitter?: string
+    facebook?: string
+    github?: string
+    website?: string
+    [key: string]: string | undefined
+  }
+  address: string | null
+  notes: string | null
+  favorite: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface DbContactFile {
+  id: string
+  contact_id: string
+  drive_item_id: string | null
+  file_url: string | null
+  file_name: string
+  file_type: string | null
+  created_at: string
+}

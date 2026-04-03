@@ -7,7 +7,7 @@ export function VoiceMemosApp() {
   const { memos, isLoading } = useVoiceMemos()
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="@container flex flex-col h-full bg-[var(--color-bg-elevated)]">
       {/* Recording controls */}
       <div
         className="shrink-0 border-b"

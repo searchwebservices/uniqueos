@@ -7,7 +7,7 @@ export function AIChatApp() {
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null)
 
   return (
-    <div className="flex h-full">
+    <div className="@container flex h-full bg-[var(--color-bg-elevated)]">
       {/* Sidebar */}
       <div
         className="w-52 shrink-0 flex flex-col border-r"

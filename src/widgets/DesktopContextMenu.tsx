@@ -1,5 +1,6 @@
-import { LayoutGrid, Image, MessageSquare } from 'lucide-react'
+import { LayoutGrid, Image, MessageSquare, FolderPlus, AppWindow } from 'lucide-react'
 import { useWindowStore } from '@/stores/window-store'
+import { useDesktopApps } from '@/stores/desktop-apps-store'
 
 interface Props {
   x: number
@@ -7,10 +8,12 @@ interface Props {
   onClose: () => void
   onAddWidget: () => void
   onAddWhatsAppShortcut?: () => void
+  onNewFolder?: () => void
 }
 
-export function DesktopContextMenu({ x, y, onClose, onAddWidget, onAddWhatsAppShortcut }: Props) {
+export function DesktopContextMenu({ x, y, onClose, onAddWidget, onAddWhatsAppShortcut, onNewFolder }: Props) {
   const openWindow = useWindowStore((s) => s.openWindow)
+  const openLauncher = useDesktopApps((s) => s.openLauncher)
 
   function handleAddWidget() {
     onAddWidget()
@@ -22,7 +25,14 @@ export function DesktopContextMenu({ x, y, onClose, onAddWidget, onAddWhatsAppSh
     onClose()
   }
 
+  function handleAddApp() {
+    openLauncher()
+    onClose()
+  }
+
   const items = [
+    { label: 'Add app', icon: AppWindow, action: handleAddApp },
+    { label: 'New folder', icon: FolderPlus, action: () => { onNewFolder?.(); onClose() } },
     { label: 'Add widget', icon: LayoutGrid, action: handleAddWidget },
     { label: 'Change wallpaper', icon: Image, action: handleChangeWallpaper },
     { label: 'New WhatsApp shortcut', icon: MessageSquare, action: () => { onAddWhatsAppShortcut?.(); onClose() } },

@@ -26,7 +26,15 @@ const MOCK_INVENTORY: InventoryItem[] = [
   { id: '12', name: 'Navy Napkin', category: 'Textiles', price: 4.00, quantity: 120, available: 120, image: 'https://images.unsplash.com/photo-1464618663641-bbdd760ae84a?w=200&h=200&fit=crop' },
 ]
 
-const CATEGORIES = ['All', 'Textiles', 'Cutlery', 'Glassware', 'Tableware', 'Decor', 'Accessories']
+const CATEGORIES = [
+  { id: 'All', label: 'Todos' },
+  { id: 'Textiles', label: 'Textiles' },
+  { id: 'Cutlery', label: 'Cubiertos' },
+  { id: 'Glassware', label: 'Cristaleria' },
+  { id: 'Tableware', label: 'Vajilla' },
+  { id: 'Decor', label: 'Decoracion' },
+  { id: 'Accessories', label: 'Accesorios' },
+]
 
 export function InventoryApp() {
   const [search, setSearch] = useState('')
@@ -35,12 +43,12 @@ export function InventoryApp() {
 
   const filtered = MOCK_INVENTORY.filter(item => {
     if (category !== 'All' && item.category !== category) return false
-    if (search && !item.name.toLowerCase().includes(search.toLowerCase())) return false
+    if (search && !item.name.toLowerCase().includes(search.toLowerCase()) && !item.category.toLowerCase().includes(search.toLowerCase())) return false
     return true
   })
 
   return (
-    <div className="app-container flex flex-col h-full bg-[var(--color-bg-primary)]">
+    <div className="app-container flex flex-col h-full bg-[var(--color-bg-elevated)]">
       {/* Header */}
       <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
         <div className="flex items-center justify-between mb-3">
@@ -88,14 +96,14 @@ export function InventoryApp() {
         <div className="flex gap-1.5 mt-2 overflow-x-auto pb-1">
           {CATEGORIES.map(cat => (
             <button
-              key={cat} onClick={() => setCategory(cat)}
+              key={cat.id} onClick={() => setCategory(cat.id)}
               className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors whitespace-nowrap"
               style={{
-                background: category === cat ? 'var(--color-accent)' : 'var(--color-bg-secondary)',
-                color: category === cat ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
+                background: category === cat.id ? 'var(--color-accent)' : 'var(--color-bg-secondary)',
+                color: category === cat.id ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
               }}
             >
-              {cat}
+              {cat.label}
             </button>
           ))}
         </div>

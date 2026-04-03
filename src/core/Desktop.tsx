@@ -1,3 +1,4 @@
+import { TopBar } from './TopBar'
 import { DesktopSurface } from './DesktopSurface'
 import { Dock } from './Dock'
 import { HomeMenu } from './HomeMenu'
@@ -8,20 +9,25 @@ import { WindowManager } from '@/windows/WindowManager'
 import { useKeyboard } from '@/hooks/useKeyboard'
 import { usePersistence } from '@/hooks/usePersistence'
 import { useRealtimeSync } from '@/hooks/useRealtimeSync'
+import { useDevice } from '@/hooks/useDevice'
+import { useDesktopPersistence } from '@/hooks/useDesktopPersistence'
 import { Toaster } from 'sonner'
 
 export function Desktop() {
   useKeyboard()
   usePersistence()
   useRealtimeSync()
+  const { currentDevice } = useDevice()
+  useDesktopPersistence(currentDevice)
 
   return (
     <div className="fixed inset-0 flex flex-col bg-[var(--color-bg-primary)]">
+      <TopBar />
       <DesktopSurface />
       <WindowManager />
       <SnapOverlay />
-      <Dock />
       <HomeMenu />
+      <Dock />
       <MyAppsLauncher />
       <CommandPalette />
       <Toaster

@@ -84,7 +84,7 @@ export function QRCreatorApp() {
   }, [])
 
   return (
-    <div className="flex flex-col h-full overflow-auto">
+    <div className="@container flex flex-col h-full overflow-auto bg-[var(--color-bg-elevated)]">
       <div className="flex flex-col items-center gap-6 p-6">
         {/* Input */}
         <div className="w-full max-w-md">
