@@ -40,7 +40,7 @@ export function InventoryApp() {
   })
 
   return (
-    <div className="flex flex-col h-full bg-[var(--color-bg-primary)]">
+    <div className="app-container flex flex-col h-full bg-[var(--color-bg-primary)]">
       {/* Header */}
       <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
         <div className="flex items-center justify-between mb-3">
@@ -75,12 +75,12 @@ export function InventoryApp() {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border" style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-secondary)' }}>
+          <div className="search-container flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-colors focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_2px_var(--color-accent-subtle)]" style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-secondary)' }}>
             <Search size={14} className="text-[var(--color-text-tertiary)]" />
             <input
               type="text" placeholder="Buscar item..."
               value={search} onChange={e => setSearch(e.target.value)}
-              className="flex-1 bg-transparent text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] outline-none"
+              className="flex-1 bg-transparent text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] outline-none focus:outline-none"
             />
           </div>
         </div>
@@ -104,31 +104,33 @@ export function InventoryApp() {
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
         {view === 'grid' ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {filtered.map(item => (
-              <div
-                key={item.id}
-                className="rounded-xl border overflow-hidden transition-all hover:shadow-sm"
-                style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-elevated)' }}
-              >
-                <div className="aspect-square bg-[var(--color-bg-secondary)] overflow-hidden">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                </div>
-                <div className="p-2.5">
-                  <p className="text-xs font-medium text-[var(--color-text-primary)] leading-tight">{item.name}</p>
-                  <p className="text-[10px] text-[var(--color-text-tertiary)] mt-0.5">{item.category}</p>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-xs font-semibold text-[var(--color-accent)]">${item.price.toFixed(2)}</span>
-                    <span className="text-[10px] text-[var(--color-text-tertiary)]">
-                      <Package size={10} className="inline mr-0.5" />{item.available}/{item.quantity}
-                    </span>
+          <div className="max-w-5xl mx-auto">
+            <div className="inventory-grid">
+              {filtered.map(item => (
+                <div
+                  key={item.id}
+                  className="rounded-xl border overflow-hidden transition-all hover:shadow-sm"
+                  style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-elevated)' }}
+                >
+                  <div className="aspect-square bg-[var(--color-bg-secondary)] overflow-hidden">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="p-3">
+                    <p className="text-xs font-medium text-[var(--color-text-primary)] leading-tight">{item.name}</p>
+                    <p className="text-[10px] text-[var(--color-text-tertiary)] mt-0.5">{item.category}</p>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-xs font-semibold text-[var(--color-accent)]">${item.price.toFixed(2)}</span>
+                      <span className="text-[10px] text-[var(--color-text-tertiary)]">
+                        <Package size={10} className="inline mr-0.5" />{item.available}/{item.quantity}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         ) : (
-          <div className="space-y-1">
+          <div className="max-w-3xl mx-auto space-y-1">
             {filtered.map(item => (
               <div
                 key={item.id}

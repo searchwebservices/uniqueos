@@ -16,11 +16,11 @@ const ICONS = {
 }
 
 const CATEGORY_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  prep: { bg: 'rgba(184,122,75,0.08)', border: '#d4956a', text: '#b87a4b' },
-  ceremony: { bg: 'rgba(26,122,154,0.08)', border: '#1a7a9a', text: '#0f5f7a' },
-  cocktail: { bg: 'rgba(107,181,207,0.08)', border: '#6BB5CF', text: '#3a97b8' },
-  reception: { bg: 'rgba(212,149,106,0.08)', border: '#d4956a', text: '#b87a4b' },
-  setup: { bg: 'rgba(156,139,120,0.06)', border: '#9C8B78', text: '#9C8B78' },
+  prep:      { bg: 'var(--color-cat-prep-subtle)',     border: 'var(--color-cat-prep)',     text: 'var(--color-cat-prep)' },
+  ceremony:  { bg: 'var(--color-cat-ceremony-subtle)', border: 'var(--color-cat-ceremony)', text: 'var(--color-ocean-deep)' },
+  cocktail:  { bg: 'var(--color-cat-cocktail-subtle)', border: 'var(--color-cat-cocktail)', text: 'var(--color-cat-cocktail)' },
+  reception: { bg: 'var(--color-cat-reception-subtle)', border: 'var(--color-cat-reception)', text: 'var(--color-cat-prep)' },
+  setup:     { bg: 'var(--color-cat-setup-subtle)',    border: 'var(--color-cat-setup)',    text: 'var(--color-cat-setup)' },
 }
 
 const TIMELINE: TimelineEvent[] = [
@@ -59,11 +59,11 @@ const TIMELINE: TimelineEvent[] = [
 ]
 
 const CATEGORIES = [
-  { id: 'all', label: 'All' },
+  { id: 'all', label: 'Todos' },
   { id: 'prep', label: 'Prep' },
-  { id: 'ceremony', label: 'Ceremony' },
-  { id: 'cocktail', label: 'Cocktail' },
-  { id: 'reception', label: 'Reception' },
+  { id: 'ceremony', label: 'Ceremonia' },
+  { id: 'cocktail', label: 'Coctel' },
+  { id: 'reception', label: 'Recepcion' },
 ]
 
 export function TimelineApp() {
@@ -74,17 +74,17 @@ export function TimelineApp() {
     : TIMELINE.filter(e => e.category === categoryFilter)
 
   return (
-    <div className="flex flex-col h-full bg-[var(--color-bg-primary)]">
+    <div className="app-container flex flex-col h-full bg-[var(--color-bg-primary)]">
       {/* Header */}
       <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
         <div className="flex items-center justify-between mb-1">
-          <div>
+          <div className="min-w-0">
             <h1 className="text-lg font-semibold text-[var(--color-text-primary)]">Maggie & Carson</h1>
-            <p className="text-xs text-[var(--color-text-tertiary)]">March 26, 2026 &middot; Corazon Cabo &middot; Sunset 6:33 PM &middot; 59 guests</p>
+            <p className="text-xs text-[var(--color-text-tertiary)]">Mar 26, 2026 &middot; Corazon Cabo &middot; 59 invitados</p>
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg" style={{ background: 'rgba(26,122,154,0.1)' }}>
-            <Sun size={14} className="text-[#1a7a9a]" />
-            <span className="text-xs font-semibold text-[#0f5f7a]">6:33 PM</span>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg shrink-0 ml-3" style={{ background: 'var(--color-ocean-subtle)' }}>
+            <Sun size={14} style={{ color: 'var(--color-ocean)' }} />
+            <span className="text-xs font-medium" style={{ color: 'var(--color-ocean-deep)' }}>6:33 PM</span>
           </div>
         </div>
 
@@ -107,44 +107,46 @@ export function TimelineApp() {
 
       {/* Timeline */}
       <div className="flex-1 overflow-y-auto px-5 py-3">
-        {events.map((event, i) => {
-          const IconComp = ICONS[event.icon]
-          const cat = CATEGORY_COLORS[event.category]
-          return (
-            <div key={i} className="flex gap-3 mb-1">
-              {/* Time column */}
-              <div className="w-16 flex-shrink-0 text-right pt-2.5">
-                <span className="text-[11px] font-mono font-medium text-[var(--color-text-tertiary)]">{event.time}</span>
-              </div>
-
-              {/* Timeline line */}
-              <div className="flex flex-col items-center w-6 flex-shrink-0">
-                <div
-                  className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-2"
-                  style={{ background: event.highlight ? cat.border : cat.bg, border: `1.5px solid ${cat.border}` }}
-                >
-                  <IconComp size={12} style={{ color: event.highlight ? 'white' : cat.text }} />
+        <div className="max-w-xl mx-auto">
+          {events.map((event, i) => {
+            const IconComp = ICONS[event.icon]
+            const cat = CATEGORY_COLORS[event.category]
+            return (
+              <div key={i} className="flex gap-3 mb-1">
+                {/* Time column */}
+                <div className="w-16 flex-shrink-0 text-right pt-2.5">
+                  <span className="text-[11px] font-mono font-medium text-[var(--color-text-tertiary)]">{event.time}</span>
                 </div>
-                {i < events.length - 1 && (
-                  <div className="w-px flex-1 min-h-[8px]" style={{ background: 'var(--color-border)' }} />
-                )}
-              </div>
 
-              {/* Content */}
-              <div
-                className="flex-1 rounded-lg px-3 py-2 mb-1"
-                style={{ background: event.highlight ? cat.bg : 'transparent' }}
-              >
-                <p className="text-xs font-medium text-[var(--color-text-primary)]" style={event.highlight ? { color: cat.text } : {}}>
-                  {event.title}
-                </p>
-                {event.detail && (
-                  <p className="text-[11px] text-[var(--color-text-tertiary)] mt-0.5">{event.detail}</p>
-                )}
+                {/* Timeline line */}
+                <div className="flex flex-col items-center w-6 flex-shrink-0">
+                  <div
+                    className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-2"
+                    style={{ background: event.highlight ? cat.border : cat.bg, border: `1.5px solid ${cat.border}` }}
+                  >
+                    <IconComp size={12} style={{ color: event.highlight ? 'white' : cat.text }} />
+                  </div>
+                  {i < events.length - 1 && (
+                    <div className="w-[1.5px] flex-1 min-h-[8px]" style={{ background: 'var(--color-border)' }} />
+                  )}
+                </div>
+
+                {/* Content */}
+                <div
+                  className="flex-1 rounded-lg px-3 py-2 mb-1"
+                  style={{ background: event.highlight ? cat.bg : 'transparent' }}
+                >
+                  <p className="text-xs font-medium text-[var(--color-text-primary)]" style={event.highlight ? { color: cat.text } : {}}>
+                    {event.title}
+                  </p>
+                  {event.detail && (
+                    <p className="text-[11px] text-[var(--color-text-tertiary)] mt-0.5">{event.detail}</p>
+                  )}
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
     </div>
   )

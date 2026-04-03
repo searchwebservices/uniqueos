@@ -154,7 +154,7 @@ export function DesktopSurface() {
       className="fixed inset-0 overflow-hidden outline-none"
       style={{
         top: 'var(--topbar-height)',
-        bottom: 'var(--dock-height)',
+        bottom: 0,
         zIndex: 0,
         background: wallpaperStyle.background,
         backgroundSize: wallpaperStyle.backgroundSize,

@@ -28,6 +28,32 @@
   --color-accent-hover: #a66b3f;
   --color-accent-subtle: #b87a4b1a;
 
+  /* --- Ocean palette (UCW brand — data viz & status) --- */
+  --color-ocean-deep: #0f5f7a;
+  --color-ocean: #1a7a9a;
+  --color-ocean-mid: #3a97b8;
+  --color-ocean-light: #6BB5CF;
+  --color-ocean-subtle: rgba(26, 122, 154, 0.08);
+
+  /* --- Phase colors (ocean→copper gradient) --- */
+  --color-phase-1: #3a97b8;
+  --color-phase-2: #6BB5CF;
+  --color-phase-3: #1a7a9a;
+  --color-phase-4: #d4956a;
+  --color-phase-5: #b87a4b;
+
+  /* --- Category colors (timeline) --- */
+  --color-cat-prep: #b87a4b;
+  --color-cat-prep-subtle: rgba(184, 122, 75, 0.08);
+  --color-cat-ceremony: #1a7a9a;
+  --color-cat-ceremony-subtle: rgba(26, 122, 154, 0.08);
+  --color-cat-cocktail: #3a97b8;
+  --color-cat-cocktail-subtle: rgba(107, 181, 207, 0.08);
+  --color-cat-reception: #d4956a;
+  --color-cat-reception-subtle: rgba(212, 149, 106, 0.08);
+  --color-cat-setup: #9C8B78;
+  --color-cat-setup-subtle: rgba(156, 139, 120, 0.06);
+
   /* --- Semantic --- */
   --color-success: #4a7c59;
   --color-warning: #c4841d;
@@ -83,7 +109,7 @@
   --transition-slow: 300ms ease;
 
   /* --- Layout --- */
-  --topbar-height: 36px;
+  --topbar-height: 0px;
   --dock-height: 64px;
   --desktop-top: var(--topbar-height);
   --desktop-bottom: var(--dock-height);
@@ -108,6 +134,29 @@
   --color-accent: #d4956a;
   --color-accent-hover: #e0a578;
   --color-accent-subtle: #d4956a1a;
+
+  --color-ocean-deep: #1a8ab0;
+  --color-ocean: #2a9ac0;
+  --color-ocean-mid: #4ab7d8;
+  --color-ocean-light: #7cc5df;
+  --color-ocean-subtle: rgba(42, 154, 192, 0.12);
+
+  --color-phase-1: #4ab7d8;
+  --color-phase-2: #7cc5df;
+  --color-phase-3: #2a9ac0;
+  --color-phase-4: #e0a578;
+  --color-phase-5: #d4956a;
+
+  --color-cat-prep: #d4956a;
+  --color-cat-prep-subtle: rgba(212, 149, 106, 0.1);
+  --color-cat-ceremony: #2a9ac0;
+  --color-cat-ceremony-subtle: rgba(42, 154, 192, 0.1);
+  --color-cat-cocktail: #4ab7d8;
+  --color-cat-cocktail-subtle: rgba(74, 183, 216, 0.1);
+  --color-cat-reception: #e0a578;
+  --color-cat-reception-subtle: rgba(224, 165, 120, 0.1);
+  --color-cat-setup: #a89e8e;
+  --color-cat-setup-subtle: rgba(168, 158, 142, 0.08);
 
   --color-window-bg: #2e2c24;
   --color-window-border: #3a3830;
@@ -203,6 +252,13 @@ textarea:focus-visible {
   box-shadow: 0 0 0 2px var(--color-accent-subtle), inset 0 0 0 1px var(--color-accent);
 }
 
+/* Inputs inside search containers delegate focus to the container */
+.search-container input:focus-visible,
+.search-container input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 /* Animation utilities */
 @keyframes fade-in {
   from { opacity: 0; }
@@ -256,4 +312,44 @@ textarea:focus-visible {
 ::selection {
   background: var(--color-accent-subtle);
   color: var(--color-text-primary);
+}
+
+/* Container query support for window-embedded apps */
+.app-container {
+  container-type: inline-size;
+  container-name: app;
+}
+
+/* Inventory grid — responsive via container queries */
+.inventory-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+}
+@container app (min-width: 500px) {
+  .inventory-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@container app (min-width: 700px) {
+  .inventory-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@container app (min-width: 1000px) {
+  .inventory-grid { grid-template-columns: repeat(5, 1fr); }
+}
+
+/* Quotes client info grid */
+.quotes-client-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@container app (min-width: 500px) {
+  .quotes-client-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Couples metadata row */
+.couple-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
 }

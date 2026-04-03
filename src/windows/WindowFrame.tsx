@@ -120,7 +120,7 @@ export function WindowFrame({ window: win }: Props) {
       style={{ zIndex: win.zIndex, pointerEvents: 'auto' }}
       onMouseDown={handleMouseDown}
       className={cn(
-        'flex flex-col rounded-[var(--radius-lg)] overflow-hidden',
+        'rounded-[var(--radius-lg)] overflow-hidden',
         'border border-[var(--color-window-border)]',
         isFocused ? 'shadow-[var(--shadow-window)]' : 'shadow-[var(--shadow-md)]'
       )}
@@ -167,8 +167,8 @@ export function WindowFrame({ window: win }: Props) {
         </div>
       </div>
 
-      {/* Content area */}
-      <div className="flex-1 overflow-auto bg-[var(--color-window-bg)]">
+      {/* Content area — absolute to fill below title bar, ensures scroll works */}
+      <div className="absolute inset-0 top-9 overflow-hidden bg-[var(--color-bg-primary)] flex flex-col">
         <WindowContent window={win} app={app} />
       </div>
     </Rnd>

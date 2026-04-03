@@ -23,9 +23,11 @@ export function WindowContent({ window: win, app }: Props) {
     <WindowErrorBoundary windowId={win.id}>
       <Suspense fallback={<WindowSkeleton />}>
         <MemoryRouter initialEntries={[win.initialRoute || '/']}>
-          <Routes>
-            <Route path="/*" element={<AppComponent />} />
-          </Routes>
+          <div className="flex flex-col h-full min-h-0">
+            <Routes>
+              <Route path="/*" element={<AppComponent />} />
+            </Routes>
+          </div>
         </MemoryRouter>
       </Suspense>
     </WindowErrorBoundary>

@@ -123,7 +123,7 @@ export function TopBar() {
             className="w-7 h-7 rounded-full bg-[var(--color-accent)] flex items-center justify-center text-[10px] font-medium text-[var(--color-text-inverse)] hover:opacity-90 transition-opacity"
             aria-label="Profile menu"
           >
-            U
+            L
           </button>
           {showProfile && <ProfileDropdown onClose={() => setShowProfile(false)} />}
         </div>
