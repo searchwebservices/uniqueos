@@ -6,7 +6,7 @@ import {
   Plus,
   Phone,
   Mail,
-  Instagram,
+  Camera,
 } from 'lucide-react'
 import { VENDOR_CATEGORIES, MOCK_VENDORS, type Vendor } from './vendors-data'
 
@@ -160,7 +160,7 @@ function VendorCard({ vendor, showCategory }: { vendor: Vendor; showCategory: bo
         )}
         {vendor.instagram && (
           <span className="flex items-center gap-1">
-            <Instagram size={10} />
+            <Camera size={10} />
             {vendor.instagram}
           </span>
         )}

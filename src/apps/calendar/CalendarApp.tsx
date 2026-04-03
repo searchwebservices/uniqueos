@@ -15,6 +15,7 @@ import { MonthView } from './MonthView'
 import { WeekView } from './WeekView'
 import { DayView } from './DayView'
 import { EventForm } from './EventForm'
+import { MiniMonth } from './MiniMonth'
 import { cn } from '@/lib/cn'
 
 type CalendarView = 'month' | 'week' | 'day'
@@ -159,36 +160,84 @@ export function CalendarApp() {
         </div>
       </div>
 
-      {/* Calendar view */}
-      <div className="flex-1 min-h-0">
-        {activeData.isLoading ? (
-          <div className="flex items-center justify-center h-full">
-            <span className="text-sm text-[var(--color-text-tertiary)]">
-              Loading...
-            </span>
+      {/* Calendar body — sidebar + view */}
+      <div className="flex flex-1 min-h-0">
+        {/* Mini month sidebar — visible at wider container sizes */}
+        <div
+          className="hidden @[640px]:flex flex-col gap-4 p-3 border-r shrink-0"
+          style={{ borderColor: 'var(--color-border-subtle)' }}
+        >
+          <MiniMonth
+            currentDate={currentDate}
+            selectedDate={currentDate}
+            onSelectDate={(date) => {
+              setCurrentDate(date)
+              setView('day')
+            }}
+            onChangeMonth={setCurrentDate}
+          />
+
+          {/* Upcoming events */}
+          <div>
+            <h3 className="text-[10px] font-medium uppercase text-[var(--color-text-tertiary)] mb-1.5 px-1">
+              Upcoming
+            </h3>
+            <div className="space-y-1">
+              {activeData.events
+                .filter((e) => new Date(e.start_at) >= new Date())
+                .slice(0, 4)
+                .map((event) => (
+                  <button
+                    key={event.id}
+                    onClick={() => openEdit(event)}
+                    className="w-full text-left px-2 py-1 rounded-[var(--radius-sm)] hover:bg-[var(--color-bg-tertiary)] transition-colors"
+                  >
+                    <div className="text-[10px] text-[var(--color-text-tertiary)]">
+                      {format(new Date(event.start_at), event.all_day ? 'MMM d' : 'MMM d, h:mm a')}
+                    </div>
+                    <div className="text-[11px] font-medium text-[var(--color-text-primary)] truncate">
+                      {event.title}
+                    </div>
+                  </button>
+                ))}
+            </div>
           </div>
-        ) : view === 'month' ? (
-          <MonthView
-            currentDate={currentDate}
-            events={activeData.events}
-            onDayClick={(date) => openCreate(date)}
-            onEventClick={openEdit}
-          />
-        ) : view === 'week' ? (
-          <WeekView
-            currentDate={currentDate}
-            events={activeData.events}
-            onTimeClick={(date) => openCreate(date)}
-            onEventClick={openEdit}
-          />
-        ) : (
-          <DayView
-            currentDate={currentDate}
-            events={activeData.events}
-            onTimeClick={(date) => openCreate(date)}
-            onEventClick={openEdit}
-          />
-        )}
+        </div>
+
+        {/* Main calendar view */}
+        <div className="flex-1 min-h-0 min-w-0">
+          {activeData.isLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <span className="text-sm text-[var(--color-text-tertiary)]">
+                Loading...
+              </span>
+            </div>
+          ) : view === 'month' ? (
+            <MonthView
+              currentDate={currentDate}
+              events={activeData.events}
+              onDayClick={(date) => {
+                setCurrentDate(date)
+                setView('day')
+              }}
+              onEventClick={openEdit}
+            />
+          ) : view === 'week' ? (
+            <WeekView
+              currentDate={currentDate}
+              events={activeData.events}
+              onTimeClick={(date) => openCreate(date)}
+              onEventClick={openEdit}
+            />
+          ) : (
+            <DayView
+              currentDate={currentDate}
+              events={activeData.events}
+              onTimeClick={(date) => openCreate(date)}
+              onEventClick={openEdit}
+            />
+          )}
+        </div>
       </div>
 
       {/* Event form modal */}

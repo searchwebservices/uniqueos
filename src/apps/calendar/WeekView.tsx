@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import {
   startOfWeek,
   addDays,
@@ -14,6 +14,15 @@ import { cn } from '@/lib/cn'
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 const HOUR_HEIGHT = 48 // px per hour
 
+function useCurrentMinute() {
+  const [now, setNow] = useState(new Date())
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 60_000)
+    return () => clearInterval(interval)
+  }, [])
+  return now
+}
+
 interface WeekViewProps {
   currentDate: Date
   events: DbCalendarEvent[]
@@ -27,6 +36,7 @@ export function WeekView({
   onTimeClick,
   onEventClick,
 }: WeekViewProps) {
+  const now = useCurrentMinute()
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 })
   const weekDays = useMemo(
     () => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)),
@@ -134,6 +144,23 @@ export function WeekView({
                     }}
                   />
                 ))}
+
+                {/* Current time indicator */}
+                {isToday(day) && (() => {
+                  const minutesSinceMidnight = now.getHours() * 60 + now.getMinutes()
+                  const top = (minutesSinceMidnight / 60) * HOUR_HEIGHT
+                  return (
+                    <div
+                      className="absolute left-0 right-0 z-10 pointer-events-none"
+                      style={{ top }}
+                    >
+                      <div className="relative flex items-center">
+                        <div className="w-2 h-2 rounded-full bg-[var(--color-error)] -ml-1 shrink-0" />
+                        <div className="flex-1 h-[2px] bg-[var(--color-error)]" />
+                      </div>
+                    </div>
+                  )
+                })()}
 
                 {/* Events */}
                 {dayEvents

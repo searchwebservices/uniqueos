@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, Plus, ChevronRight, MapPin, Users, Calendar } from 'lucide-react'
+import { Search, Plus, MapPin, Users } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { MOCK_COUPLES, type Couple } from './couples-data'
 
@@ -120,34 +120,51 @@ export function CouplesApp() {
         </div>
       </div>
 
-      {/* Couple List */}
+      {/* Couple Grid */}
       <div className="flex-1 overflow-y-auto px-4 py-3">
-        <div className="max-w-2xl mx-auto">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
           {filtered.map(couple => (
             <button
               key={couple.id}
               onClick={() => navigate(`/couple/${couple.id}`)}
-              className="w-full text-left p-4 rounded-lg mb-2 border transition-all hover:shadow-sm"
+              className="text-left rounded-xl border overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5 group"
               style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-elevated)' }}
             >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-semibold text-[var(--color-text-primary)]">{couple.names}</span>
-                    <StatusBadge status={couple.status} />
-                  </div>
-                  <div className="couple-meta text-[11px] text-[var(--color-text-tertiary)]">
-                    <span className="flex items-center gap-1"><Calendar size={11} />{couple.date}</span>
-                    <span className="flex items-center gap-1"><MapPin size={11} />{couple.venue}</span>
-                    <span className="flex items-center gap-1"><Users size={11} />{couple.guests} pax</span>
-                  </div>
-                </div>
-                <ChevronRight size={16} className="text-[var(--color-text-tertiary)] mt-1 shrink-0" />
-              </div>
+              {/* Color banner top */}
+              <div
+                className="h-2 w-full"
+                style={{ background: PHASE_COLORS[couple.phase] ?? 'var(--color-accent)' }}
+              />
 
-              <div className="flex items-center gap-3 mt-3">
+              <div className="p-3.5">
+                {/* Date — primary headline */}
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm font-semibold text-[var(--color-text-primary)]">
+                    {couple.date}
+                  </span>
+                  <StatusBadge status={couple.status} />
+                </div>
+
+                {/* Names — subheadline */}
+                <h3 className="text-xs text-[var(--color-text-secondary)] font-medium mb-3">
+                  {couple.names}
+                </h3>
+
+                {/* Venue + Guests */}
+                <div className="flex items-center gap-3 text-[10px] text-[var(--color-text-tertiary)] mb-3">
+                  <span className="flex items-center gap-1 truncate">
+                    <MapPin size={10} className="shrink-0" />
+                    {couple.venue}
+                  </span>
+                  <span className="flex items-center gap-1 shrink-0">
+                    <Users size={10} />
+                    {couple.guests}
+                  </span>
+                </div>
+
+                {/* Phase progress */}
                 <PhaseBar phase={couple.phase} progress={couple.progress} />
-                <span className="text-[10px] font-medium text-[var(--color-text-secondary)] whitespace-nowrap">
+                <span className="block mt-1.5 text-[9px] font-medium text-[var(--color-text-tertiary)]">
                   Fase {couple.phase}: {couple.phaseLabel}
                 </span>
               </div>

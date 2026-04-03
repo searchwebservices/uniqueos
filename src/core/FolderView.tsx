@@ -15,12 +15,12 @@ import type { DbDesktopFolder, FolderIconPreset, FolderItemType } from '@/types/
 import type { LucideIcon } from 'lucide-react'
 
 const ITEM_TYPE_ICONS: Record<FolderItemType, { icon: LucideIcon; color: string }> = {
-  app: { icon: AppWindow, color: '#7c5cbf' },
-  shortcut: { icon: Link2, color: '#4a6fa5' },
-  subfolder: { icon: Folder, color: '#b87a4b' },
-  file: { icon: FileText, color: '#4a7c59' },
-  link: { icon: Link2, color: '#667eea' },
-  contact: { icon: User, color: '#3a8a8a' },
+  app: { icon: AppWindow, color: '#8a7aaa' },
+  shortcut: { icon: Link2, color: '#5a7fa0' },
+  subfolder: { icon: Folder, color: '#3d8b9e' },
+  file: { icon: FileText, color: '#5b8a65' },
+  link: { icon: Link2, color: '#5ea3b4' },
+  contact: { icon: User, color: '#4a9090' },
 }
 
 interface Props {

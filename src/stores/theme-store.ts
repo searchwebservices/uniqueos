@@ -16,9 +16,9 @@ interface ThemeStore {
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set, get) => ({
-      mode: 'system',
+      mode: 'light',
       wallpaper: 'default',
-      accentColor: '#b87a4b',
+      accentColor: '#3d8b9e',
 
       setMode: (mode) => set({ mode }),
       setWallpaper: (wallpaper) => set({ wallpaper }),
@@ -32,6 +32,14 @@ export const useThemeStore = create<ThemeStore>()(
         return mode
       },
     }),
-    { name: 'tabletop-theme' }
+    {
+      name: 'tabletop-theme',
+      version: 2,
+      migrate: () => ({
+        mode: 'light' as ThemeMode,
+        wallpaper: 'default',
+        accentColor: '#3d8b9e',
+      }),
+    }
   )
 )

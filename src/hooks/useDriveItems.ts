@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/providers/AuthProvider'
+import { getDemoDriveItems, getDemoDriveFolderPath, getDemoDriveItem } from '@/lib/demo-data'
 import type { DbDriveItem } from '@/types/database'
 
 const QUERY_KEY = 'drive_items'
@@ -30,7 +31,10 @@ export function useDriveItems(parentId: string | null = null) {
 
       const { data, error } = await q
       if (error) throw error
-      return data ?? []
+
+      // If Supabase returned real data, use it; otherwise fall back to demo
+      if (data && data.length > 0) return data
+      return getDemoDriveItems(parentId)
     },
   })
 
@@ -302,9 +306,16 @@ export function useFolderPath(folderId: string | null) {
           .single()
         const item = data as DbDriveItem | null
 
-        if (error || !item) break
+        if (error || !item) {
+          // Fall back to demo data
+          return getDemoDriveFolderPath(folderId)
+        }
         path.unshift(item)
         currentId = item.parent_id
+      }
+
+      if (path.length === 0) {
+        return getDemoDriveFolderPath(folderId)
       }
 
       return path

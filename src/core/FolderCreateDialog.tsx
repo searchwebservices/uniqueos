@@ -6,13 +6,13 @@ import { PRESET_ICONS } from './FolderIcon'
 import type { FolderIconPreset } from '@/types/database'
 
 const ACCENT_PRESETS = [
-  '#b87a4b',
-  '#4a7c59',
-  '#4a6fa5',
-  '#c4841d',
-  '#c4473a',
-  '#7c5cbf',
-  '#3a8a8a',
+  '#3d8b9e',
+  '#5b8a65',
+  '#5a7fa0',
+  '#b08d6a',
+  '#b85a50',
+  '#8a7aaa',
+  '#4a9090',
   '#8a6d3b',
   '#667eea',
   '#25D366',
@@ -39,7 +39,7 @@ export function FolderCreateDialog({ onClose }: Props) {
   const { createFolder } = useFolders()
   const [name, setName] = useState('')
   const [selectedPreset, setSelectedPreset] = useState<FolderIconPreset>('folder')
-  const [selectedColor, setSelectedColor] = useState('#b87a4b')
+  const [selectedColor, setSelectedColor] = useState('#3d8b9e')
 
   const handleCreate = () => {
     const trimmed = name.trim()

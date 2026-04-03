@@ -63,7 +63,7 @@ export const useFoldersStore = create<FoldersStore>()(
           name: input.name,
           parent_id: input.parent_id ?? null,
           icon_preset: input.icon_preset ?? 'folder',
-          color: input.color ?? '#b87a4b',
+          color: input.color ?? '#3d8b9e',
           config: {},
           created_at: now,
           updated_at: now,

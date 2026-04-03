@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import {
   format,
   isToday,
@@ -10,6 +10,15 @@ import type { DbCalendarEvent } from '@/types/database'
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 const HOUR_HEIGHT = 56 // px per hour
+
+function useCurrentMinute() {
+  const [now, setNow] = useState(new Date())
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 60_000)
+    return () => clearInterval(interval)
+  }, [])
+  return now
+}
 
 interface DayViewProps {
   currentDate: Date
@@ -24,6 +33,8 @@ export function DayView({
   onTimeClick,
   onEventClick,
 }: DayViewProps) {
+  const now = useCurrentMinute()
+
   const allDayEvents = useMemo(
     () => events.filter((e) => e.all_day),
     [events],
@@ -111,6 +122,23 @@ export function DayView({
               <div className="flex-1 cursor-pointer hover:bg-[var(--color-bg-secondary)] transition-colors" />
             </div>
           ))}
+
+          {/* Current time indicator */}
+          {isToday(currentDate) && (() => {
+            const minutesSinceMidnight = now.getHours() * 60 + now.getMinutes()
+            const top = (minutesSinceMidnight / 60) * HOUR_HEIGHT
+            return (
+              <div
+                className="absolute z-10 pointer-events-none"
+                style={{ top, left: 56, right: 8 }}
+              >
+                <div className="relative flex items-center">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[var(--color-error)] -ml-1.5 shrink-0" />
+                  <div className="flex-1 h-[2px] bg-[var(--color-error)]" />
+                </div>
+              </div>
+            )
+          })()}
 
           {/* Timed events */}
           {timedEvents.map((event) => {

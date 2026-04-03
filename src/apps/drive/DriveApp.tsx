@@ -1,10 +1,12 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import {
   ArrowLeft,
   LayoutGrid,
   LayoutList,
   Upload,
   FolderPlus,
+  Search,
+  HardDrive,
 } from 'lucide-react'
 import type { DbDriveItem } from '@/types/database'
 import { useDriveItems, useFolderPath, getSignedUrl } from './hooks'
@@ -17,6 +19,13 @@ import { FileContextMenu } from './FileContextMenu'
 import { NewFolderDialog } from './NewFolderDialog'
 import { PublishDialog } from './PublishDialog'
 import { cn } from '@/lib/cn'
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
+}
 
 type ViewMode = 'grid' | 'list'
 
@@ -36,6 +45,7 @@ export function DriveApp() {
   const [publishItem, setPublishItem] = useState<DbDriveItem | null>(null)
   const [renameItem, setRenameItem] = useState<DbDriveItem | null>(null)
   const [renameValue, setRenameValue] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
 
   const {
     items,
@@ -126,7 +136,23 @@ export function DriveApp() {
     setRenameItem(null)
   }, [renameItem, renameValue, renameItemMutation])
 
-  const isEmpty = !isLoading && items.length === 0
+  const filteredItems = useMemo(() => {
+    if (!searchQuery.trim()) return items
+    const q = searchQuery.toLowerCase()
+    return items.filter((item) => item.name.toLowerCase().includes(q))
+  }, [items, searchQuery])
+
+  const storageUsed = useMemo(() => {
+    return items.reduce((sum, item) => sum + (item.size_bytes ?? 0), 0)
+  }, [items])
+
+  const itemCounts = useMemo(() => {
+    const folders = filteredItems.filter((i) => i.type === 'folder').length
+    const files = filteredItems.filter((i) => i.type === 'file').length
+    return { folders, files }
+  }, [filteredItems])
+
+  const isEmpty = !isLoading && filteredItems.length === 0
 
   return (
     <div className="@container flex flex-col h-full bg-[var(--color-bg-elevated)]">
@@ -151,6 +177,21 @@ export function DriveApp() {
           <Breadcrumbs
             path={folderPath ?? []}
             onNavigate={handleNavigate}
+          />
+        </div>
+
+        {/* Search */}
+        <div
+          className="search-container flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-md)] border transition-colors focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_2px_var(--color-accent-subtle)]"
+          style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-secondary)' }}
+        >
+          <Search size={12} className="text-[var(--color-text-tertiary)] shrink-0" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search files..."
+            className="bg-transparent text-xs outline-none w-20 focus:w-32 transition-all text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)]"
           />
         </div>
 
@@ -223,24 +264,42 @@ export function DriveApp() {
               Loading...
             </span>
           </div>
-        ) : showUploader || isEmpty ? (
+        ) : showUploader ? (
           <div className="p-4 flex flex-col gap-4">
-            {!isEmpty && items.length > 0 && null}
             <FileUploader
               onUpload={handleUpload}
               uploading={uploadFile.isPending}
             />
-            {isEmpty && !showUploader && (
-              <div className="flex flex-col items-center gap-2 py-8">
+          </div>
+        ) : isEmpty ? (
+          <div className="flex flex-col items-center justify-center gap-3 py-12 flex-1">
+            {searchQuery.trim() ? (
+              <>
+                <Search size={28} className="text-[var(--color-text-tertiary)] opacity-40" />
+                <p className="text-sm text-[var(--color-text-tertiary)]">
+                  No files match "{searchQuery}"
+                </p>
+              </>
+            ) : (
+              <>
+                <HardDrive size={28} className="text-[var(--color-text-tertiary)] opacity-40" />
                 <p className="text-sm text-[var(--color-text-tertiary)]">
                   This folder is empty
                 </p>
-              </div>
+                <button
+                  onClick={() => setShowUploader(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-[var(--radius-md)] font-medium text-[var(--color-text-inverse)] transition-colors hover:opacity-90"
+                  style={{ background: 'var(--color-accent)' }}
+                >
+                  <Upload size={12} />
+                  Upload files
+                </button>
+              </>
             )}
           </div>
         ) : viewMode === 'grid' ? (
           <GridView
-            items={items}
+            items={filteredItems}
             selectedId={selectedId}
             onSelect={handleSelect}
             onOpen={handleOpen}
@@ -248,12 +307,31 @@ export function DriveApp() {
           />
         ) : (
           <DriveListView
-            items={items}
+            items={filteredItems}
             selectedId={selectedId}
             onSelect={handleSelect}
             onOpen={handleOpen}
             onContextMenu={handleContextMenu}
           />
+        )}
+      </div>
+
+      {/* Status bar */}
+      <div
+        className="flex items-center justify-between px-3 py-1.5 border-t shrink-0 text-[10px]"
+        style={{
+          borderColor: 'var(--color-border-subtle)',
+          color: 'var(--color-text-tertiary)',
+        }}
+      >
+        <span>
+          {itemCounts.folders > 0 && `${itemCounts.folders} folder${itemCounts.folders !== 1 ? 's' : ''}`}
+          {itemCounts.folders > 0 && itemCounts.files > 0 && ', '}
+          {itemCounts.files > 0 && `${itemCounts.files} file${itemCounts.files !== 1 ? 's' : ''}`}
+          {itemCounts.folders === 0 && itemCounts.files === 0 && 'Empty'}
+        </span>
+        {storageUsed > 0 && (
+          <span>{formatBytes(storageUsed)} in this folder</span>
         )}
       </div>
 

@@ -4,9 +4,20 @@ import { useAuth } from '@/providers/AuthProvider'
 import { useOnlineStatus } from '@/hooks/useOnlineStatus'
 import { offlineDb } from '@/lib/offline-db'
 import { syncWrite } from '@/lib/sync'
+import { DEMO_CALENDAR_EVENTS } from '@/lib/demo-data'
 import type { DbCalendarEvent } from '@/types/database'
 
 const QUERY_KEY = 'calendar_events'
+
+function filterByRange(events: DbCalendarEvent[], rangeStart?: string, rangeEnd?: string) {
+  return events
+    .filter((e) => {
+      if (rangeStart && e.start_at < rangeStart) return false
+      if (rangeEnd && e.start_at > rangeEnd) return false
+      return true
+    })
+    .sort((a, b) => a.start_at.localeCompare(b.start_at))
+}
 
 export function useCalendarEvents(opts?: {
   rangeStart?: string
@@ -35,7 +46,10 @@ export function useCalendarEvents(opts?: {
 
         const { data, error } = await q
         if (error) throw error
-        return data ?? []
+
+        // If Supabase returned real data, use it; otherwise fall back to demo
+        if (data && data.length > 0) return data
+        return filterByRange(DEMO_CALENDAR_EVENTS, opts?.rangeStart, opts?.rangeEnd)
       }
 
       // Offline: read from IndexedDB
@@ -44,6 +58,11 @@ export function useCalendarEvents(opts?: {
         .equals(user.id)
 
       const all = await collection.toArray()
+
+      // Fall back to demo data if IndexedDB is empty
+      if (all.length === 0) {
+        return filterByRange(DEMO_CALENDAR_EVENTS, opts?.rangeStart, opts?.rangeEnd)
+      }
 
       return all
         .filter((e) => {
