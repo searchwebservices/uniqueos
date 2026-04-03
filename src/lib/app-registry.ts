@@ -17,6 +17,8 @@ import {
   Image,
   Users,
   Mail,
+  Truck,
+  Building2,
 } from 'lucide-react'
 import type { AppRegistryEntry } from '@/types/os'
 
@@ -62,7 +64,7 @@ const apps: AppRegistryEntry[] = [
     dockDefault: true,
     dockOrder: 2,
     routes: [{ path: '/*', loader: () => import('@/apps/inventory') }],
-    buildRoute: () => '/',
+    buildRoute: (meta) => meta?.categoryId ? `/category/${meta.categoryId}` : '/',
   },
   {
     appId: 'quotes',
@@ -106,6 +108,36 @@ const apps: AppRegistryEntry[] = [
     dockOrder: 5,
     routes: [{ path: '/*', loader: () => import('@/apps/email') }],
     buildRoute: () => '/',
+  },
+
+  {
+    appId: 'vendors',
+    title: 'Proveedores',
+    icon: Truck,
+    category: 'productivity',
+    component: lazy(() => import('@/apps/vendors')),
+    defaultSize: { width: 520, height: 600 },
+    minSize: { width: 380, height: 400 },
+    singleton: true,
+    dockDefault: true,
+    dockOrder: 6,
+    routes: [{ path: '/*', loader: () => import('@/apps/vendors') }],
+    buildRoute: (meta) => meta?.categoryId ? `/category/${meta.categoryId}` : '/',
+  },
+
+  {
+    appId: 'venues',
+    title: 'Venues',
+    icon: Building2,
+    category: 'productivity',
+    component: lazy(() => import('@/apps/venues')),
+    defaultSize: { width: 520, height: 600 },
+    minSize: { width: 380, height: 400 },
+    singleton: true,
+    dockDefault: true,
+    dockOrder: 7,
+    routes: [{ path: '/*', loader: () => import('@/apps/venues') }],
+    buildRoute: (meta) => meta?.venueId ? `/venue/${meta.venueId}` : '/',
   },
 
   // ===== PRODUCTIVITY APPS =====
