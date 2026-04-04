@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/providers/AuthProvider'
-import { getDemoDriveItems, getDemoDriveFolderPath, getDemoDriveItem } from '@/lib/demo-data'
+import { getDemoDriveItems, getDemoDriveFolderPath } from '@/lib/demo-data'
 import type { DbDriveItem } from '@/types/database'
 
 const QUERY_KEY = 'drive_items'

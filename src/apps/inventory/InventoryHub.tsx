@@ -8,7 +8,7 @@ import {
   Flame,
   Fan,
 } from 'lucide-react'
-import { CATEGORIES, MOCK_INVENTORY, type CategoryInfo } from './inventory-data'
+import { CATEGORIES, MOCK_INVENTORY } from './inventory-data'
 import type { LucideIcon } from 'lucide-react'
 
 const CATEGORY_ICONS: Record<string, LucideIcon> = {

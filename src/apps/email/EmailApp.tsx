@@ -485,7 +485,7 @@ function ThreadDetail({
 
 function MessageBubble({
   message,
-  isLast,
+  isLast: _isLast,
   defaultExpanded,
   onApproveDraft,
   onSendDraft,

@@ -12,10 +12,6 @@ function id(n: number) {
   return `demo-${String(n).padStart(4, '0')}`
 }
 
-function iso(month: number, day: number, hour = 0, min = 0) {
-  return new Date(2026, month - 1, day, hour, min).toISOString()
-}
-
 const now = new Date()
 const thisYear = now.getFullYear()
 const thisMonth = now.getMonth() // 0-indexed
