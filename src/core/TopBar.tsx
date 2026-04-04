@@ -71,11 +71,9 @@ export function TopBar() {
     >
       {/* Left: Logo */}
       <div className="flex items-center gap-1.5">
-        <img
-          src="/ucw-logo.png"
-          alt="UCW"
-          className="w-5 h-5 object-contain"
-        />
+        <div className="w-5 h-5 rounded bg-[var(--color-accent)] flex items-center justify-center">
+          <span className="text-[10px] font-bold text-[var(--color-text-inverse)]">U</span>
+        </div>
         <span className="text-xs font-medium text-[var(--color-text-primary)] hidden sm:inline">
           UniqueOS
         </span>

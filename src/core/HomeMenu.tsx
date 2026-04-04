@@ -78,11 +78,11 @@ export function HomeMenu() {
         aria-label="Home menu"
       >
         <img
-          src="/ucw-logo.png"
+          src="/ucw-logo-black.png"
           alt="UCW"
           className={cn(
             'w-8 h-8 object-contain transition-opacity',
-            open ? 'opacity-100' : 'opacity-70 hover:opacity-100'
+            open ? 'opacity-100' : 'opacity-60 hover:opacity-100'
           )}
         />
       </button>

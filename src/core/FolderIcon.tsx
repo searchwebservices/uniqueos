@@ -18,16 +18,16 @@ import type { DbDesktopFolder, FolderIconPreset } from '@/types/database'
 import type { LucideIcon } from 'lucide-react'
 
 export const PRESET_ICONS: Record<FolderIconPreset, { icon: LucideIcon; defaultColor: string }> = {
-  folder: { icon: Folder, defaultColor: '#3d8b9e' },
+  folder: { icon: Folder, defaultColor: '#b87a4b' },
   whatsapp: { icon: MessageCircle, defaultColor: '#25D366' },
-  documents: { icon: FileText, defaultColor: '#5a7fa0' },
-  projects: { icon: Briefcase, defaultColor: '#8a7aaa' },
-  media: { icon: Image, defaultColor: '#b08d6a' },
-  contacts: { icon: Users, defaultColor: '#5b8a65' },
-  finance: { icon: DollarSign, defaultColor: '#b85a50' },
-  tools: { icon: Wrench, defaultColor: '#4a9090' },
-  social: { icon: Share2, defaultColor: '#5ea3b4' },
-  custom: { icon: Folder, defaultColor: '#9c8b78' },
+  documents: { icon: FileText, defaultColor: '#4a6fa5' },
+  projects: { icon: Briefcase, defaultColor: '#7c5cbf' },
+  media: { icon: Image, defaultColor: '#c4841d' },
+  contacts: { icon: Users, defaultColor: '#4a7c59' },
+  finance: { icon: DollarSign, defaultColor: '#c4473a' },
+  tools: { icon: Wrench, defaultColor: '#3a8a8a' },
+  social: { icon: Share2, defaultColor: '#667eea' },
+  custom: { icon: Folder, defaultColor: '#8a6d3b' },
 }
 
 interface Props {

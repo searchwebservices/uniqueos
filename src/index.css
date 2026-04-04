@@ -6,59 +6,59 @@
 }
 
 :root {
-  /* --- Surface (warm stone / cream) --- */
-  --color-bg-primary: #f7f5f0;
-  --color-bg-secondary: #f0ede6;
-  --color-bg-tertiary: #e8e4dc;
-  --color-bg-elevated: #fcfbf8;
+  /* --- Surface --- */
+  --color-bg-primary: #faf9f5;
+  --color-bg-secondary: #f5f3ee;
+  --color-bg-tertiary: #edeae4;
+  --color-bg-elevated: #ffffff;
 
-  /* --- Text (warm charcoal) --- */
-  --color-text-primary: #2c2a26;
-  --color-text-secondary: #6b6860;
-  --color-text-tertiary: #a09b90;
-  --color-text-inverse: #f7f5f0;
+  /* --- Text --- */
+  --color-text-primary: #141413;
+  --color-text-secondary: #5c5b57;
+  --color-text-tertiary: #9c9a93;
+  --color-text-inverse: #faf9f5;
 
-  /* --- Borders (stone tones) --- */
-  --color-border: #ddd9d0;
-  --color-border-subtle: #ebe8e1;
-  --color-border-strong: #ccc8be;
+  /* --- Borders --- */
+  --color-border: #e5e2db;
+  --color-border-subtle: #efede8;
+  --color-border-strong: #d1cec6;
 
-  /* --- Accent (muted teal — from UCW clover logo) --- */
-  --color-accent: #3d8b9e;
-  --color-accent-hover: #357b8c;
-  --color-accent-subtle: rgba(61, 139, 158, 0.08);
+  /* --- Accent (warm copper) --- */
+  --color-accent: #b87a4b;
+  --color-accent-hover: #a66b3f;
+  --color-accent-subtle: #b87a4b1a;
 
-  /* --- Ocean palette (UCW brand — softer for light mode) --- */
-  --color-ocean-deep: #2a7a94;
-  --color-ocean: #3d8b9e;
-  --color-ocean-mid: #5ea3b4;
-  --color-ocean-light: #89bfcc;
-  --color-ocean-subtle: rgba(61, 139, 158, 0.06);
+  /* --- Ocean palette (UCW brand — data viz & status) --- */
+  --color-ocean-deep: #0f5f7a;
+  --color-ocean: #1a7a9a;
+  --color-ocean-mid: #3a97b8;
+  --color-ocean-light: #6BB5CF;
+  --color-ocean-subtle: rgba(26, 122, 154, 0.08);
 
-  /* --- Phase colors (muted gradient: teal → warm sand) --- */
-  --color-phase-1: #5ea3b4;
-  --color-phase-2: #89bfcc;
-  --color-phase-3: #3d8b9e;
-  --color-phase-4: #c9a07a;
-  --color-phase-5: #b08d6a;
+  /* --- Phase colors (ocean→copper gradient) --- */
+  --color-phase-1: #3a97b8;
+  --color-phase-2: #6BB5CF;
+  --color-phase-3: #1a7a9a;
+  --color-phase-4: #d4956a;
+  --color-phase-5: #b87a4b;
 
-  /* --- Category colors (timeline — softened) --- */
-  --color-cat-prep: #b08d6a;
-  --color-cat-prep-subtle: rgba(176, 141, 106, 0.06);
-  --color-cat-ceremony: #3d8b9e;
-  --color-cat-ceremony-subtle: rgba(61, 139, 158, 0.06);
-  --color-cat-cocktail: #5ea3b4;
-  --color-cat-cocktail-subtle: rgba(94, 163, 180, 0.06);
-  --color-cat-reception: #c9a07a;
-  --color-cat-reception-subtle: rgba(201, 160, 122, 0.06);
+  /* --- Category colors (timeline) --- */
+  --color-cat-prep: #b87a4b;
+  --color-cat-prep-subtle: rgba(184, 122, 75, 0.08);
+  --color-cat-ceremony: #1a7a9a;
+  --color-cat-ceremony-subtle: rgba(26, 122, 154, 0.08);
+  --color-cat-cocktail: #3a97b8;
+  --color-cat-cocktail-subtle: rgba(107, 181, 207, 0.08);
+  --color-cat-reception: #d4956a;
+  --color-cat-reception-subtle: rgba(212, 149, 106, 0.08);
   --color-cat-setup: #9C8B78;
-  --color-cat-setup-subtle: rgba(156, 139, 120, 0.05);
+  --color-cat-setup-subtle: rgba(156, 139, 120, 0.06);
 
-  /* --- Semantic (muted, earthy) --- */
-  --color-success: #5b8a65;
-  --color-warning: #b8883a;
-  --color-error: #b85a50;
-  --color-info: #5a7fa0;
+  /* --- Semantic --- */
+  --color-success: #4a7c59;
+  --color-warning: #c4841d;
+  --color-error: #c4473a;
+  --color-info: #4a6fa5;
 
   /* --- Window chrome --- */
   --color-window-bg: var(--color-bg-elevated);
@@ -68,11 +68,11 @@
   --color-window-titlebar-inactive: var(--color-bg-tertiary);
 
   /* --- Dock --- */
-  --color-dock-bg: rgba(252, 251, 248, 0.80);
+  --color-dock-bg: rgba(255, 255, 255, 0.75);
   --color-dock-border: var(--color-border-subtle);
 
   /* --- Top bar --- */
-  --color-topbar-bg: rgba(247, 245, 240, 0.88);
+  --color-topbar-bg: rgba(250, 249, 245, 0.85);
   --color-topbar-border: var(--color-border-subtle);
 
   /* --- Typography --- */
@@ -97,11 +97,11 @@
   --radius-xl: 16px;
   --radius-full: 9999px;
 
-  /* --- Shadows (warm, minimal) --- */
-  --shadow-sm: 0 1px 2px rgba(44, 42, 38, 0.04);
-  --shadow-md: 0 2px 8px rgba(44, 42, 38, 0.06);
-  --shadow-lg: 0 4px 16px rgba(44, 42, 38, 0.08);
-  --shadow-window: 0 8px 32px rgba(44, 42, 38, 0.10);
+  /* --- Shadows (minimal) --- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-window: 0 8px 32px rgba(0, 0, 0, 0.12);
 
   /* --- Transitions --- */
   --transition-fast: 100ms ease;
@@ -109,7 +109,7 @@
   --transition-slow: 300ms ease;
 
   /* --- Layout --- */
-  --topbar-height: 36px;
+  --topbar-height: 0px;
   --dock-height: 64px;
   --desktop-top: var(--topbar-height);
   --desktop-bottom: var(--dock-height);
@@ -137,30 +137,30 @@
   --color-border-subtle: #2e2c24;
   --color-border-strong: #4a4840;
 
-  --color-accent: #5ab0c4;
-  --color-accent-hover: #6dc0d2;
-  --color-accent-subtle: rgba(90, 176, 196, 0.12);
+  --color-accent: #d4956a;
+  --color-accent-hover: #e0a578;
+  --color-accent-subtle: #d4956a1a;
 
-  --color-ocean-deep: #3da0ba;
-  --color-ocean: #5ab0c4;
-  --color-ocean-mid: #7ac4d4;
-  --color-ocean-light: #9cd6e2;
-  --color-ocean-subtle: rgba(90, 176, 196, 0.10);
+  --color-ocean-deep: #1a8ab0;
+  --color-ocean: #2a9ac0;
+  --color-ocean-mid: #4ab7d8;
+  --color-ocean-light: #7cc5df;
+  --color-ocean-subtle: rgba(42, 154, 192, 0.12);
 
-  --color-phase-1: #7ac4d4;
-  --color-phase-2: #9cd6e2;
-  --color-phase-3: #5ab0c4;
-  --color-phase-4: #d4b08a;
-  --color-phase-5: #c4a07a;
+  --color-phase-1: #4ab7d8;
+  --color-phase-2: #7cc5df;
+  --color-phase-3: #2a9ac0;
+  --color-phase-4: #e0a578;
+  --color-phase-5: #d4956a;
 
-  --color-cat-prep: #c4a07a;
-  --color-cat-prep-subtle: rgba(196, 160, 122, 0.10);
-  --color-cat-ceremony: #5ab0c4;
-  --color-cat-ceremony-subtle: rgba(90, 176, 196, 0.10);
-  --color-cat-cocktail: #7ac4d4;
-  --color-cat-cocktail-subtle: rgba(122, 196, 212, 0.10);
-  --color-cat-reception: #d4b08a;
-  --color-cat-reception-subtle: rgba(212, 176, 138, 0.10);
+  --color-cat-prep: #d4956a;
+  --color-cat-prep-subtle: rgba(212, 149, 106, 0.1);
+  --color-cat-ceremony: #2a9ac0;
+  --color-cat-ceremony-subtle: rgba(42, 154, 192, 0.1);
+  --color-cat-cocktail: #4ab7d8;
+  --color-cat-cocktail-subtle: rgba(74, 183, 216, 0.1);
+  --color-cat-reception: #e0a578;
+  --color-cat-reception-subtle: rgba(224, 165, 120, 0.1);
   --color-cat-setup: #a89e8e;
   --color-cat-setup-subtle: rgba(168, 158, 142, 0.08);
 

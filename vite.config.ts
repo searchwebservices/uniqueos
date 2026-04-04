@@ -9,15 +9,14 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      devOptions: { enabled: false },
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'UniqueOS',
-        short_name: 'UniqueOS',
-        description: 'Unique Cabo Weddings — Internal OS',
-        theme_color: '#3d8b9e',
-        background_color: '#f7f5f0',
+        name: 'TabletopOS',
+        short_name: 'TabletopOS',
+        description: 'A desktop OS in your browser',
+        theme_color: '#b87a4b',
+        background_color: '#faf9f5',
         display: 'standalone',
         start_url: '/',
         icons: [

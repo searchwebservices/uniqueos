@@ -50,6 +50,10 @@ export const useDockStore = create<DockStore>()(
         return { badges }
       }),
     }),
-    { name: 'tabletop-dock' }
+    {
+      name: 'tabletop-dock',
+      version: 2,
+      migrate: () => ({ items: [], badges: {} }),
+    }
   )
 )

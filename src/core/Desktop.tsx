@@ -1,4 +1,3 @@
-import { TopBar } from './TopBar'
 import { DesktopSurface } from './DesktopSurface'
 import { Dock } from './Dock'
 import { HomeMenu } from './HomeMenu'
@@ -22,7 +21,6 @@ export function Desktop() {
 
   return (
     <div className="fixed inset-0 flex flex-col bg-[var(--color-bg-primary)]">
-      <TopBar />
       <DesktopSurface />
       <WindowManager />
       <SnapOverlay />

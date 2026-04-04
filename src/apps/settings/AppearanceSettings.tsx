@@ -35,14 +35,14 @@ const THEME_OPTIONS: { value: ThemeMode; label: string; Icon: typeof Sun }[] = [
 ]
 
 const ACCENT_PRESETS = [
-  '#3d8b9e',
-  '#5b8a65',
-  '#5a7fa0',
-  '#b08d6a',
-  '#b85a50',
-  '#8a7aaa',
-  '#4a9090',
-  '#9c8b78',
+  '#b87a4b',
+  '#4a7c59',
+  '#4a6fa5',
+  '#c4841d',
+  '#c4473a',
+  '#7c5cbf',
+  '#3a8a8a',
+  '#8a6d3b',
 ]
 
 export function AppearanceSettings() {

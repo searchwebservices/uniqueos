@@ -5,9 +5,9 @@ import { ICON_LIBRARY, resolveIcon } from '@/lib/icon-library'
 import { useDesktopCustomization, type DesktopItemOverride } from '@/stores/desktop-customization-store'
 
 const COLOR_PRESETS = [
-  '#3d8b9e', '#5b8a65', '#5a7fa0', '#b08d6a', '#b85a50',
-  '#8a7aaa', '#4a9090', '#9c8b78', '#5ea3b4', '#25D366',
-  '#89bfcc', '#c9a07a', '#b8883a', '#2a7a94', '#b08d6a',
+  '#b87a4b', '#4a7c59', '#4a6fa5', '#c4841d', '#c4473a',
+  '#7c5cbf', '#3a8a8a', '#8a6d3b', '#667eea', '#25D366',
+  '#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#f97316',
 ]
 
 interface Props {
